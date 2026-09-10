@@ -1,8 +1,16 @@
 from django.urls import path
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
+
 from .views import blocked_websites, register_user
 
 
 urlpatterns = [
     path('websites/', blocked_websites, name='blocked-websites'),
     path('auth/register/', register_user, name='register'),
+
+    path('auth/login/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
+    path('auth/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
 ]
