@@ -2,7 +2,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .models import BlockedWebsite
-from .serializers import BlockedWebsiteSerializer
+from .serializers import (
+    BlockedWebsiteSerializer,
+    RegisterSerializer
+)
 
 
 @api_view(['GET'])
@@ -16,3 +19,27 @@ def blocked_websites(request):
     )
 
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+def register_user(request):
+
+    serializer = RegisterSerializer(data=request.data)
+
+    if serializer.is_valid():
+
+        user = serializer.save()
+
+        return Response(
+            {
+                "message": "User registered successfully.",
+                "username": user.username,
+                "email": user.email
+            },
+            status=201
+        )
+
+    return Response(
+        serializer.errors,
+        status=400
+    )
