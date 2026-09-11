@@ -4,13 +4,40 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from .views import blocked_websites, register_user
-
+from .views import (
+    blocked_websites,
+    add_blocked_website,
+    register_user
+)
 
 urlpatterns = [
-    path('websites/', blocked_websites, name='blocked-websites'),
-    path('auth/register/', register_user, name='register'),
+    path(
+        'websites/',
+        blocked_websites,
+        name='blocked-websites'
+    ),
 
-    path('auth/login/', TokenObtainPairView.as_view(), name='token-obtain-pair'),
-    path('auth/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
+    path(
+        'websites/add/',
+        add_blocked_website,
+        name='add-blocked-website'
+    ),
+
+    path(
+        'auth/register/',
+        register_user,
+        name='register'
+    ),
+
+    path(
+        'auth/login/',
+        TokenObtainPairView.as_view(),
+        name='token-obtain-pair'
+    ),
+
+    path(
+        'auth/refresh/',
+        TokenRefreshView.as_view(),
+        name='token-refresh'
+    ),
 ]
