@@ -7,7 +7,8 @@ from rest_framework_simplejwt.views import (
 from .views import (
     blocked_websites,
     add_blocked_website,
-    register_user
+    register_user,
+    start_focus_session
 )
 
 urlpatterns = [
@@ -39,5 +40,10 @@ urlpatterns = [
         'auth/refresh/',
         TokenRefreshView.as_view(),
         name='token-refresh'
+    ),
+    path(
+        'focus/start/',
+        start_focus_session,
+        name='start-focus-session'
     ),
 ]

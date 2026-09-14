@@ -6,11 +6,14 @@ from rest_framework.decorators import (
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Q
-from .models import BlockedWebsite
+from .models import BlockedWebsite,FocusSession
+from django.utils import timezone
+
 
 from .serializers import (
     BlockedWebsiteSerializer,
-    RegisterSerializer
+    RegisterSerializer,
+    FocusSessionSerializer
 )
 
 
@@ -93,4 +96,45 @@ def register_user(request):
     return Response(
         serializer.errors,
         status=400
+    )
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def start_focus_session(request):
+
+    duration = request.data.get('duration')
+
+    if not duration:
+        return Response(
+            {"error": "Duration is required."},
+            status=400
+        )
+
+    try:
+        duration = int(duration)
+    except (TypeError, ValueError):
+        return Response(
+            {"error": "Duration must be an integer."},
+            status=400
+        )
+
+    if duration <= 0:
+        return Response(
+            {"error": "Duration must be greater than 0."},
+            status=400
+        )
+
+    session = FocusSession.objects.create(
+        user=request.user,
+        start_time=timezone.now(),
+        duration=duration,
+        completed=False
+    )
+
+    serializer = FocusSessionSerializer(session)
+
+    return Response(
+        serializer.data,
+        status=201
     )
