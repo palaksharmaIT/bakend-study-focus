@@ -7,8 +7,11 @@ from rest_framework_simplejwt.views import (
 from .views import (
     blocked_websites,
     add_blocked_website,
+    remove_blocked_website,
     register_user,
-    start_focus_session
+    start_focus_session,
+    complete_focus_session,
+    focus_session_history,
 )
 
 urlpatterns = [
@@ -22,6 +25,14 @@ urlpatterns = [
         'websites/add/',
         add_blocked_website,
         name='add-blocked-website'
+    ),
+
+    # NEW: actually removes/deactivates a website on the backend
+    # (frontend used to only remove it from local storage)
+    path(
+        'websites/remove/',
+        remove_blocked_website,
+        name='remove-blocked-website'
     ),
 
     path(
@@ -41,9 +52,24 @@ urlpatterns = [
         TokenRefreshView.as_view(),
         name='token-refresh'
     ),
+
     path(
         'focus/start/',
         start_focus_session,
         name='start-focus-session'
+    ),
+
+    # NEW: marks a session as completed on the backend
+    path(
+        'focus/<int:pk>/complete/',
+        complete_focus_session,
+        name='complete-focus-session'
+    ),
+
+    # NEW: lists the logged-in user's past focus sessions
+    path(
+        'focus/history/',
+        focus_session_history,
+        name='focus-session-history'
     ),
 ]
